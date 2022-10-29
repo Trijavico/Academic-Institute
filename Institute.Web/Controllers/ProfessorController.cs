@@ -1,20 +1,48 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Institute.DAL.Interfaces;
+using Institute.Web.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Institute.Web.Controllers
 {
     public class ProfessorController : Controller
     {
+        private readonly IProfessorRepository professorRepository;
+
+        public ProfessorController(IProfessorRepository professorRepository)
+        {
+            this.professorRepository = professorRepository;
+        }
+
         // GET: ProfessorController
         public ActionResult Index()
         {
-            return View();
+            var professors = this.professorRepository.GetAll().Select(st => new Models.Professor()
+            {
+                Id = st.Id,
+                Name = st.FirstName,
+                lastName = st.LastName,
+                HireDate = st.EnrollmentDate
+
+            });
+
+            return View(professors);
         }
 
         // GET: ProfessorController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            var professor = this.professorRepository.GetProfessor(id);
+
+            Professor modelprofessor = new Professor()
+            {
+                Id = professor.Id,
+                Name = professor.FirstName,
+                lastName = professor.LastName,
+                HireDate = professor.EnrollmentDate
+            };
+
+            return View(modelprofessor);
         }
 
         // GET: ProfessorController/Create
@@ -41,7 +69,17 @@ namespace Institute.Web.Controllers
         // GET: ProfessorController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var professor = this.professorRepository.GetProfessor(id);
+
+            Professor modelprofessor = new Professor()
+            {
+                Id = professor.Id,
+                Name = professor.FirstName,
+                lastName = professor.LastName,
+                HireDate = professor.EnrollmentDate
+            };
+
+            return View(modelprofessor);
         }
 
         // POST: ProfessorController/Edit/5
@@ -62,7 +100,17 @@ namespace Institute.Web.Controllers
         // GET: ProfessorController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            var professor = this.professorRepository.GetProfessor(id);
+
+            Professor modelprofessor = new Professor()
+            {
+                Id = professor.Id,
+                Name = professor.FirstName,
+                lastName = professor.LastName,
+                HireDate = professor.EnrollmentDate
+            };
+
+            return View(modelprofessor);
         }
 
         // POST: ProfessorController/Delete/5
