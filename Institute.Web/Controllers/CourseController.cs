@@ -1,8 +1,10 @@
 ﻿using Institute.DAL.Entities;
 using Institute.DAL.Interfaces;
+using Institute.DAL.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Course = Institute.DAL.Entities.Course;
+using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
+using Course = Institute.Web.Models.Course;
 
 namespace Institute.Web.Controllers
 {
@@ -53,10 +55,20 @@ namespace Institute.Web.Controllers
         // POST: ClassroomController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Models.Course modelTarget)
         {
             try
             {
+                Institute.DAL.Entities.Course target = new DAL.Entities.Course()
+                {
+                    CreationUser = 1,
+                    CreationDate = DateTime.Now,
+                    Title = modelTarget.Title,
+                    Credits = modelTarget.Credits
+                };
+
+                courseRepository.Save(target);
+
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -83,10 +95,21 @@ namespace Institute.Web.Controllers
         // POST: ClassroomController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(Models.Course modelTarget)
         {
             try
             {
+                Institute.DAL.Entities.Course target = new DAL.Entities.Course()
+
+                {
+                    ModifyDate = DateTime.Now,
+                    UserMod = 1,
+                    Title = modelTarget.Title,
+                    Credits = modelTarget.Credits,
+                };
+
+                courseRepository.Update(target);
+
                 return RedirectToAction(nameof(Index));
             }
             catch

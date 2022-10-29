@@ -1,4 +1,5 @@
 ﻿using Institute.DAL.Interfaces;
+using Institute.DAL.Repositories;
 using Institute.Web.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -54,10 +55,22 @@ namespace Institute.Web.Controllers
         // POST: ProfessorController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Models.Professor professorModel)
         {
             try
             {
+                Institute.DAL.Entities.Production.Professor myProfessor = new DAL.Entities.Production.Professor()
+                {
+                    CreationDate = DateTime.Now,
+                    CreationUser = 1,
+                    FirstName = professorModel.Name,
+                    EnrollmentDate = professorModel.HireDate,
+                    LastName = professorModel.lastName,
+                    Id = professorModel.Id
+                };
+
+                professorRepository.Save(myProfessor);
+
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -85,10 +98,23 @@ namespace Institute.Web.Controllers
         // POST: ProfessorController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(Models.Professor professorModel)
         {
             try
             {
+
+                Institute.DAL.Entities.Production.Professor pf = new DAL.Entities.Production.Professor()
+                
+                {
+                    ModifyDate = DateTime.Now,
+                    UserMod = 1,
+                    FirstName = professorModel.Name,
+                    LastName = professorModel.lastName,
+                    EnrollmentDate = professorModel.HireDate
+                };
+
+                professorRepository.Update(pf);
+
                 return RedirectToAction(nameof(Index));
             }
             catch

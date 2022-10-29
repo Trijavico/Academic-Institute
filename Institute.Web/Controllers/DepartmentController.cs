@@ -1,7 +1,9 @@
-﻿using Institute.DAL.Entities.Production;
+﻿
 using Institute.DAL.Interfaces;
+using Institute.DAL.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 using Department = Institute.Web.Models.Department;
 
 namespace Institute.Web.Controllers
@@ -28,7 +30,7 @@ namespace Institute.Web.Controllers
 
             });
 
-            return View();
+            return View(departments);
         }
 
         // GET: CareerController/Details/5
@@ -44,7 +46,7 @@ namespace Institute.Web.Controllers
                 Budget = dp.Budget
             };
 
-            return View();
+            return View(modelDepartment);
         }
 
         // GET: CareerController/Create
@@ -56,10 +58,21 @@ namespace Institute.Web.Controllers
         // POST: CareerController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Models.Department modelTarget)
         {
             try
             {
+                Institute.DAL.Entities.Production.Department target = new DAL.Entities.Production.Department()
+                {
+                    ModifyDate = DateTime.Now,
+                    UserMod = 1,
+                    Name = modelTarget.Name,
+                    Administrator = modelTarget.Administrator,
+                    Budget = modelTarget.Budget
+                };
+
+                departmentRepository.Save(target);
+
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -81,16 +94,28 @@ namespace Institute.Web.Controllers
                 Budget = dp.Budget
             };
 
-            return View();
+            return View(modelDepartment);
         }
 
         // POST: CareerController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(Models.Department modelTarget)
         {
             try
             {
+                Institute.DAL.Entities.Production.Department target = new DAL.Entities.Production.Department()
+
+                {
+                    ModifyDate = DateTime.Now,
+                    UserMod = 1,
+                    Name = modelTarget.Name,
+                    Administrator = modelTarget.Administrator,
+                    Budget = modelTarget.Budget
+                };
+
+                departmentRepository.Update(target);
+
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -112,7 +137,7 @@ namespace Institute.Web.Controllers
                 Budget = dp.Budget
             };
 
-            return View();
+            return View(modelDepartment);
         }
 
         // POST: CareerController/Delete/5

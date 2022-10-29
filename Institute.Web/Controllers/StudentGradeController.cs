@@ -3,6 +3,8 @@ using Institute.DAL.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Institute.Web.Models;
+using Institute.DAL.Entities;
+using StudentGrade = Institute.Web.Models.StudentGrade;
 
 namespace Institute.Web.Controllers
 {
@@ -52,10 +54,18 @@ namespace Institute.Web.Controllers
         // POST: SubjectController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Models.StudentGrade studentGradeModel)
         {
             try
             {
+                Institute.DAL.Entities.StudentGrade myStudentGrade = new DAL.Entities.StudentGrade()
+                {
+                    Id = studentGradeModel.Student,
+                    Grade = studentGradeModel.Grade
+                };
+
+                studentGradeRepository.Save(myStudentGrade);
+
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -81,10 +91,20 @@ namespace Institute.Web.Controllers
         // POST: SubjectController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(Models.StudentGrade studentGradeModel)
         {
             try
             {
+                var myModel = studentGradeModel;
+
+                Institute.DAL.Entities.StudentGrade student = new DAL.Entities.StudentGrade()
+                {
+                    Grade = studentGradeModel.Grade,
+                    Id = studentGradeModel.Student
+                };
+
+                studentGradeRepository.Update(student);
+
                 return RedirectToAction(nameof(Index));
             }
             catch

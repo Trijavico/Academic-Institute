@@ -65,6 +65,7 @@ namespace Institute.Web.Controllers
                 Institute.DAL.Entities.Student myStudent = new DAL.Entities.Student()
                 {
                     CreationUser = 1,
+                    CreationDate = DateTime.Now,
                     FirstName = studentModel.Name,
                     EnrollmentDate = studentModel.EnrollmentDate,
                     LastName = studentModel.lastName,
@@ -137,7 +138,7 @@ namespace Institute.Web.Controllers
                 EnrollmentDate = student.EnrollmentDate
             };
 
-            return View();
+            return View(modelstudent);
         }
 
         // POST: StudentController/Delete/5

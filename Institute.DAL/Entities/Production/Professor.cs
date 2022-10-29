@@ -1,8 +1,8 @@
 ﻿
 namespace Institute.DAL.Entities.Production
 {
-    public class Professor : Core.BaseEntity
+    public class Professor : Core.Person
     {
-
+        public int Id { get; set; }
     }
 }
