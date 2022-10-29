@@ -5,7 +5,5 @@
         public int Id { get; set; }
 
         public DateTime? HireDate { get; set; }
-
-        public string Title { get; set; }
     }
 }

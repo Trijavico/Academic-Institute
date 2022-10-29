@@ -4,6 +4,5 @@
     {
         public int Student { get; set; }
         public int Grade { get; set; }
-        public int Credits { get; set; }
     }
 }
