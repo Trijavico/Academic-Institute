@@ -15,7 +15,7 @@ namespace Institute.DAL.Core
         public DateTime? ModifyDate { get; set; }
         public int? DeleteUser { get; set; }
         public bool Deleted { get; set; }
-        public bool DeletedDate { get; set; }
+        public DateTime DeletedDate { get; set; }
         public bool UserDeleted { get; set; }
     }
 }

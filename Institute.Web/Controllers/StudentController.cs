@@ -29,9 +29,9 @@ namespace Institute.Web.Controllers
                 lastName = st.LastName,
                 EnrollmentDate = st.EnrollmentDate
 
-            });
+            }) ;
 
-            return View(students);
+            return View();
         }
 
         // GET: StudentController/Details/5
@@ -46,7 +46,7 @@ namespace Institute.Web.Controllers
                 EnrollmentDate = student.EnrollmentDate
             };
 
-            return View();
+            return View(modelstudent);
         }
 
         // GET: StudentController/Create

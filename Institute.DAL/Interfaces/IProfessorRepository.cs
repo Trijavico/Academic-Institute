@@ -1,4 +1,6 @@
 ﻿using Institute.DAL.Entities.Production;
+using System.Linq.Expressions;
+
 
 namespace Institute.DAL.Interfaces
 {
@@ -9,6 +11,6 @@ namespace Institute.DAL.Interfaces
         void Remove(Professor student);
         Professor GetProfessor(int studentId);
         IEnumerable<Professor> GetAll();
-        bool Exists(int studentId);
+        bool Exists(Expression<Func<Professor, bool>> filter);
     }
 }

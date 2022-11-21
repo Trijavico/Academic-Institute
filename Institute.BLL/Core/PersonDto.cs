@@ -1,10 +1,10 @@
 ﻿
-namespace Institute.DAL.Core
+
+namespace Institute.BLL.Core
 {
-    public abstract class Person : BaseEntity
+    public class PersonDto : DtoAudit
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        
     }
 }

@@ -3,6 +3,7 @@ using Institute.DAL.Entities;
 using Institute.DAL.Entities.Production;
 using Institute.DAL.Interfaces;
 using Microsoft.Extensions.Logging;
+using System.Linq.Expressions;
 
 namespace Institute.DAL.Repositories
 {
@@ -20,6 +21,8 @@ namespace Institute.DAL.Repositories
         {
             return context.Professors.Any(cd => cd.Id == professorId); 
         }
+
+        public bool Exist(Expression<Func<Professor, bool>> filter) => context.Professors.Any(filter);
 
         public IEnumerable<Professor> GetAll()
         {
@@ -50,7 +53,7 @@ namespace Institute.DAL.Repositories
 
                 professorToModify.FirstName = professor.FirstName;
                 professorToModify.LastName = professor.LastName;
-                professorToModify.EnrollmentDate = professor.EnrollmentDate;
+                professorToModify.HireDate = professor.HireDate;
 
                 context.Professors.Update(professorToModify);
 

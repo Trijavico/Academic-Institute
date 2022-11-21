@@ -23,7 +23,7 @@ namespace Institute.Web.Controllers
                 Id = st.Id,
                 Name = st.FirstName,
                 lastName = st.LastName,
-                HireDate = st.EnrollmentDate
+                HireDate = st.HireDate
 
             });
 
@@ -40,7 +40,7 @@ namespace Institute.Web.Controllers
                 Id = professor.Id,
                 Name = professor.FirstName,
                 lastName = professor.LastName,
-                HireDate = professor.EnrollmentDate
+                HireDate = professor.HireDate
             };
 
             return View(modelprofessor);
@@ -64,7 +64,7 @@ namespace Institute.Web.Controllers
                     CreationDate = DateTime.Now,
                     CreationUser = 1,
                     FirstName = professorModel.Name,
-                    EnrollmentDate = professorModel.HireDate,
+                    HireDate = (DateTime)professorModel.HireDate,
                     LastName = professorModel.lastName,
                     Id = professorModel.Id
                 };
@@ -89,7 +89,7 @@ namespace Institute.Web.Controllers
                 Id = professor.Id,
                 Name = professor.FirstName,
                 lastName = professor.LastName,
-                HireDate = professor.EnrollmentDate
+                HireDate = professor.HireDate
             };
 
             return View(modelprofessor);
@@ -110,7 +110,7 @@ namespace Institute.Web.Controllers
                     UserMod = 1,
                     FirstName = professorModel.Name,
                     LastName = professorModel.lastName,
-                    EnrollmentDate = professorModel.HireDate
+                    HireDate = (DateTime)professorModel.HireDate
                 };
 
                 professorRepository.Update(pf);
@@ -133,7 +133,7 @@ namespace Institute.Web.Controllers
                 Id = professor.Id,
                 Name = professor.FirstName,
                 lastName = professor.LastName,
-                HireDate = professor.EnrollmentDate
+                HireDate = professor.HireDate
             };
 
             return View(modelprofessor);
