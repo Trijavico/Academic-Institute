@@ -12,5 +12,6 @@ namespace Institute.DAL.Interfaces
         Course GetCourse(int CourseId);
         IEnumerable<Course> GetAll();
         bool Exist(int courseId);
+        object GetEntities();
     }
 }

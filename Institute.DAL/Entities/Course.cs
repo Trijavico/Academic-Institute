@@ -10,5 +10,7 @@ namespace Institute.DAL.Entities
         public string Title { get; set; }
         public int Credits { get; set; }
         public Department Department { get; set; }
+        public int DepartmentID { get; set; }
+        public int CourseID { get; set; }
     }
 }
