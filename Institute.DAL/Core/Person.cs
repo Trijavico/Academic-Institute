@@ -5,7 +5,6 @@ namespace Institute.DAL.Core
     {
         public string FirstName { get; set; }
         public string LastName { get; set; } 
-        public DateTime? EnrollmentDate { get; set; }
         
     }
 }
