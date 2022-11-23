@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.Diagnostics.Contracts;
 
-namespace School.Service.Services
-{
+namespace Institute.BBL.Services;
+
     public class LoggerService<TService> : Institute.BLL.Contracts.ILoggerService<TService> where TService : Institute.BLL.Core.IBaseService
     {
         private readonly ILogger<TService> logger;
@@ -15,4 +15,3 @@ namespace School.Service.Services
 
         public void LogWarning(string message, params object[] args) => this.logger.LogWarning(message, args);
     }
-}
