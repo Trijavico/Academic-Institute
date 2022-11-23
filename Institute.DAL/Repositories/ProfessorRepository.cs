@@ -65,5 +65,10 @@ namespace Institute.DAL.Repositories
                 this.logger.LogError($"Error: {err.Message}", err.ToString());
             }
         }
+
+        public bool Exists(Expression<Func<Professor, bool>> filter)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
