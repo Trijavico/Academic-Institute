@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Institute.BBL.Core;
 
 namespace Institute.BLL.Dtos
 {
-    public class SaveDepartmentDto : Core.DtoDepartment
+    public class SaveDepartmentDto : DtoDepartmentBase
     {
 
     }

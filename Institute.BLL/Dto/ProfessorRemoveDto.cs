@@ -3,8 +3,8 @@
 
 namespace Institute.BLL.Dto
 {
-    public class ProfessorRemoveDto : DtoRemoveAudit
+    public class ProfessorRemoveDto : DtoAudit
     {
-
+        public bool Deleted { get; set; }
     }
 }

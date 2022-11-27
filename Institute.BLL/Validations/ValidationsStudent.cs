@@ -15,7 +15,7 @@ namespace Institute.BLL.Validations
 
             if (resutlIsValid.Success)
             {
-                if (studentBase.HireDate.HasValue)
+                if (studentBase.EnrollmentDate.HasValue)
                 {
                     // Verificar si el estudiante esta inscripto //
                     if (studentRepository.Exists(st =>

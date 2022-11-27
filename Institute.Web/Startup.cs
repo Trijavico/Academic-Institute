@@ -13,6 +13,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Institute.BLL.Contracts;
+using Institute.BLL.Services;
 
 namespace Institute.Web
 {
@@ -39,7 +41,7 @@ namespace Institute.Web
             services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 
             //Services(BL)//
-
+            services.AddTransient<IProfessorService, ProfessorService>();
             services.AddControllersWithViews();
         }
 

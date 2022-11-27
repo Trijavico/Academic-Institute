@@ -1,4 +1,6 @@
-﻿using Institute.DAL.Interfaces;
+﻿using Institute.BLL.Contracts;
+using Institute.BLL.Services;
+using Institute.DAL.Interfaces;
 using Institute.DAL.Repositories;
 using Institute.Web.Models;
 using Microsoft.AspNetCore.Http;
@@ -8,24 +10,18 @@ namespace Institute.Web.Controllers
 {
     public class ProfessorController : Controller
     {
-        private readonly IProfessorRepository professorRepository;
+        private readonly IProfessorService _service;
 
-        public ProfessorController(IProfessorRepository professorRepository)
+        public ProfessorController(IProfessorService service)
         {
-            this.professorRepository = professorRepository;
+            this._service = service;
         }
 
         // GET: ProfessorController
         public ActionResult Index()
         {
-            var professors = this.professorRepository.GetAll().Select(st => new Models.Professor()
-            {
-                Id = st.Id,
-                Name = st.FirstName,
-                lastName = st.LastName,
-                HireDate = st.HireDate
-
-            });
+            var professors = ((List<BLL.Models.StudentModel>)_service.GetAll().Data)
+                                                       .ConvertStudentModelToModel();
 
             return View(professors);
         }
@@ -33,17 +29,9 @@ namespace Institute.Web.Controllers
         // GET: ProfessorController/Details/5
         public ActionResult Details(int id)
         {
-            var professor = this.professorRepository.GetProfessor(id);
+            var professor = _service.GetById(id);
 
-            Professor modelprofessor = new Professor()
-            {
-                Id = professor.Id,
-                Name = professor.FirstName,
-                lastName = professor.LastName,
-                HireDate = professor.HireDate
-            };
-
-            return View(modelprofessor);
+            return View(professor);
         }
 
         // GET: ProfessorController/Create

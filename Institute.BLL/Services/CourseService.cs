@@ -2,6 +2,7 @@
 using System.Linq;
 using Institute.BLL.Contracts;
 using Institute.BLL.Core;
+using Institute.BLL.Dto;
 using Institute.BLL.Dtos;
 using Institute.DAL.Entities;
 using Institute.DAL.Interfaces;
@@ -14,7 +15,7 @@ namespace Institute.BLL.Services
         private readonly ICourseRepository courseRespository;
         private readonly IDepartmentRepository departmentRepository;
         private readonly ILoggerService<CourseService> loggerService;
-        private object courseRepository;
+        private ICourseRepository courseRepository;
 
         public CourseService(ICourseRepository courseRespository,
                               IDepartmentRepository departmentRepository,
@@ -101,6 +102,11 @@ namespace Institute.BLL.Services
             return result;
         }
         public ServiceResult UpdateCourse(UpdateCourse studentSaveDto)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ServiceResult UpdateCourse(UpdateCourseDto studentSaveDto)
         {
             throw new NotImplementedException();
         }

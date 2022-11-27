@@ -1,6 +1,7 @@
 using Institute.BLL.Core;
 using Institute.BLL.Dtos;
 using Institute.BLL.Responses;
+using School.Service.Dtos;
 
 namespace Institute.BLL.Contracts
 {

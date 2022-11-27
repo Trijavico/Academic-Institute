@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Institute.BLL.Dto
 {
-    public class UpdateCourseDto
+    public class UpdateCourseDto 
     {
+
     }
 }

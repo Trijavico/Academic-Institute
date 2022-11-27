@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Institute.BBL.Core;
 
 namespace Institute.BLL.Dtos
 {
-    public class UpdateDepartmentDto : Core.DtoDepartmentBase
+    public class UpdateDepartmentDto : DtoDepartmentBase
     {
-        public int Id { get; set; }
+
     }
 }
