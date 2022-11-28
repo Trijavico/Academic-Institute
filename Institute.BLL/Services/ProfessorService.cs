@@ -24,13 +24,15 @@ namespace Institute.BLL.Services
             this.logger = logger;
         }
 
+
+
         public ServiceResult GetAll()
         {
             ServiceResult result = new ServiceResult();
 
             try
             {
-                var professors = professorRepository.GetAll();
+                var professors = professorRepository.GetEntities();
 
                 result.Data = professors.Select(st => new Models.ProfessorModel()
                 {
@@ -60,7 +62,7 @@ namespace Institute.BLL.Services
 
             try
             {
-                var professor = professorRepository.GetProfessor(Id);
+                var professor = professorRepository.GetEntity(Id);
 
                 result.Data = new Models.ProfessorModel()
                 {
@@ -90,10 +92,10 @@ namespace Institute.BLL.Services
 
             try
             {
-                var professorToRemove = professorRepository.GetProfessor(professorRemoveDto.Id);
+                var professorToRemove = professorRepository.GetEntity(professorRemoveDto.Id);
 
                 professorToRemove.Id = professorRemoveDto.Id;
-                professorToRemove.UserDeleted = professorRemoveDto.UserDeleted;
+                professorToRemove.UserDeleted = true;
                 professorToRemove.Deleted = true;
                 professorToRemove.DeletedDate = DateTime.Now;
 
@@ -152,7 +154,7 @@ namespace Institute.BLL.Services
 
             try
             {
-                var professorToUpdate = professorRepository.GetProfessor(professorUpdateDto.ProfessorId);
+                var professorToUpdate = professorRepository.GetEntity(professorUpdateDto.ProfessorId);
 
                 professorToUpdate.FirstName = professorUpdateDto.FirstName;
                 professorToUpdate.LastName = professorUpdateDto.LastName;

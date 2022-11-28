@@ -18,10 +18,10 @@ namespace Institute.DAL.Context
 
         }
 
-        public DbSet<Professor> Professors { get; set; }
+        public DbSet<Professor> Instructors { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<Department> Departments { get; set; }
-        public DbSet<Course> Courses { get; set; }
+        public DbSet<Course> Course { get; set; }
         public DbSet<StudentGrade> StudentGrades { get; set; }
     }
 }

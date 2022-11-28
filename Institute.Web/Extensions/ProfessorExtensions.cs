@@ -4,7 +4,7 @@ namespace Institute.Web.Extensions
 {
     public static class ProfessorExtensions
     {
-        public static List<Professor> ConvertStudentModelToModel(this List<BLL.Models.ProfessorModel> professorModels)
+        public static List<Professor> ConverToModel(this List<BLL.Models.ProfessorModel> professorModels)
         {
             var myProfessors = professorModels.Select(item => new Professor()
             {

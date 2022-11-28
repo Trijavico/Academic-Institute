@@ -2,6 +2,7 @@
 using Institute.BLL.Services;
 using Institute.DAL.Interfaces;
 using Institute.DAL.Repositories;
+using Institute.Web.Extensions;
 using Institute.Web.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,8 +21,7 @@ namespace Institute.Web.Controllers
         // GET: ProfessorController
         public ActionResult Index()
         {
-            var professors = ((List<BLL.Models.StudentModel>)_service.GetAll().Data)
-                                                       .ConvertStudentModelToModel();
+            var professors = ((List<BLL.Models.ProfessorModel>)_service.GetAll().Data).ConverToModel();
 
             return View(professors);
         }
@@ -51,9 +51,9 @@ namespace Institute.Web.Controllers
                 {
                     CreationDate = DateTime.Now,
                     CreationUser = 1,
-                    FirstName = professorModel.Name,
+                    FirstName = professorModel.FirstName,
                     HireDate = (DateTime)professorModel.HireDate,
-                    LastName = professorModel.lastName,
+                    LastName = professorModel.LastName,
                     Id = professorModel.Id
                 };
 
