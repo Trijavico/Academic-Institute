@@ -1,6 +1,6 @@
 using Institute.BLL.Core;
 
-namespace Institute.BLL.Dtos
+namespace Institute.BLL.Dto
 {
 	public class StudentUpdateDto : DtoStudentBase
 	{
