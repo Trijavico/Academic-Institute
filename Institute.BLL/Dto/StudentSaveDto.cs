@@ -1,7 +1,7 @@
 using Institute.BLL.Core;
 using System;
 
-namespace Institute.BLL.Dtos
+namespace Institute.BLL.Dto
 {
 	public class StudentSaveDto : DtoStudentBase
 	{
