@@ -101,12 +101,12 @@ namespace Institute.BLL.Services
 
                 professorRepository.Remove(professorToRemove);
 
-                result.Message = "Estudiante eliminado correctamente";
+                result.Message = "Profesor eliminado correctamente";
             }
             catch (Exception ex)
             {
                 result.Success = false;
-                result.Message = "Error eliminando el estudiante";
+                result.Message = "Error eliminando el profesor";
                 this.logger.LogError($" {result.Message} {ex.Message}", ex.ToString());
             }
 
@@ -165,12 +165,12 @@ namespace Institute.BLL.Services
 
                 professorRepository.Update(professorToUpdate);
 
-                result.Message = "Estudiante actualizado correctamente";
+                result.Message = "Profesor actualizado correctamente";
             }
             catch (Exception ex)
             {
                 result.Success = false;
-                result.Message = "Error actualizando el estudiante";
+                result.Message = "Error actualizando el profesor";
                 this.logger.LogError($" {result.Message} {ex.Message}", ex.ToString());
             }
 
