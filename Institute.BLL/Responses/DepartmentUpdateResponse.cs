@@ -1,6 +1,6 @@
 ﻿namespace Institute.BLL.Responses
 {
-    public class ProfessorUpdateResponse : Core.ServiceResult
+    public class DepartmentUpdateResponse : Core.ServiceResult
     {
 
     }

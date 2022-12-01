@@ -8,6 +8,6 @@ namespace Institute.BLL.Contracts
     {
         DepartmentResponse SaveDepartment(DepartmentSaveDto departmentSaveDto);
         DepartmentUpdateResponse UpdateDepartment(DepartmentUpdateDto departmentSaveDto);
-        ServiceResult RemoveDepartment(DepartmentRemoveDto departmentSaveDto);
+        ServiceResult RemoveDepartment(DepartmentRemoveDto studentSaveDto);
     }
 }

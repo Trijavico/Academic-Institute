@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Institute.BLL.Core;
 
 namespace Institute.BLL.Dtos
 {
