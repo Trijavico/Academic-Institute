@@ -29,6 +29,12 @@ namespace Institute.DAL.Repositories
         {
             return context.Departments.Find(departmentId);
         }
+
+        public object GetEntities()
+        {
+            throw new NotImplementedException();
+        }
+
         public void Remove(Department department)
         {
             context.Departments.Remove(department);
