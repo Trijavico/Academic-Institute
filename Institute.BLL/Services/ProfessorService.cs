@@ -24,13 +24,15 @@ namespace Institute.BLL.Services
             this.logger = logger;
         }
 
+
+
         public ServiceResult GetAll()
         {
             ServiceResult result = new ServiceResult();
 
             try
             {
-                var professors = professorRepository.GetAll();
+                var professors = professorRepository.GetEntities();
 
                 result.Data = professors.Select(st => new Models.ProfessorModel()
                 {
@@ -60,7 +62,7 @@ namespace Institute.BLL.Services
 
             try
             {
-                var professor = professorRepository.GetProfessor(Id);
+                var professor = professorRepository.GetEntity(Id);
 
                 result.Data = new Models.ProfessorModel()
                 {
@@ -90,21 +92,21 @@ namespace Institute.BLL.Services
 
             try
             {
-                var professorToRemove = professorRepository.GetProfessor(professorRemoveDto.Id);
+                var professorToRemove = professorRepository.GetEntity(professorRemoveDto.Id);
 
                 professorToRemove.Id = professorRemoveDto.Id;
-                professorToRemove.UserDeleted = professorRemoveDto.UserDeleted;
+                professorToRemove.UserDeleted = true;
                 professorToRemove.Deleted = true;
                 professorToRemove.DeletedDate = DateTime.Now;
 
                 professorRepository.Remove(professorToRemove);
 
-                result.Message = "Estudiante eliminado correctamente";
+                result.Message = "Profesor eliminado correctamente";
             }
             catch (Exception ex)
             {
                 result.Success = false;
-                result.Message = "Error eliminando el estudiante";
+                result.Message = "Error eliminando el profesor";
                 this.logger.LogError($" {result.Message} {ex.Message}", ex.ToString());
             }
 
@@ -152,7 +154,7 @@ namespace Institute.BLL.Services
 
             try
             {
-                var professorToUpdate = professorRepository.GetProfessor(professorUpdateDto.ProfessorId);
+                var professorToUpdate = professorRepository.GetEntity(professorUpdateDto.ProfessorId);
 
                 professorToUpdate.FirstName = professorUpdateDto.FirstName;
                 professorToUpdate.LastName = professorUpdateDto.LastName;
@@ -163,12 +165,12 @@ namespace Institute.BLL.Services
 
                 professorRepository.Update(professorToUpdate);
 
-                result.Message = "Estudiante actualizado correctamente";
+                result.Message = "Profesor actualizado correctamente";
             }
             catch (Exception ex)
             {
                 result.Success = false;
-                result.Message = "Error actualizando el estudiante";
+                result.Message = "Error actualizando el profesor";
                 this.logger.LogError($" {result.Message} {ex.Message}", ex.ToString());
             }
 

@@ -12,5 +12,6 @@ namespace Institute.DAL.Interfaces
         Department GetDepartment(int departmentId);
         IEnumerable<Department> GetAll();
         bool Exist(int departmentId);
+        object GetEntities();
     }
 }
