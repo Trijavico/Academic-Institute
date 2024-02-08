@@ -1,18 +1,7 @@
 ﻿using Institute.DAL.Interfaces;
 using Institute.DAL.Repositories;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Institute.DAL.Context;
-using Institute.DAL.Interfaces;
-using Institute.DAL.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Institute.BLL.Contracts;
 using Institute.BLL.Services;
 
@@ -31,14 +20,12 @@ namespace Institute.Web
         public void ConfigureServices(IServiceCollection services)
         {
             // Context //
-            services.AddDbContext<InstituteContext>(options => options.UseSqlServer(this.Configuration.GetConnectionString("InstituteContext")));
+            services.AddDbContext<InstituteContext>(options => options.UseSqlServer(Configuration.GetConnectionString("InstituteContext")));
 
             //Repositories
             services.AddScoped<IStudentRepository, StudentRepository>();
             services.AddScoped<IProfessorRepository, ProfessorRepository>();
             services.AddScoped<ICourseRepository, CourseRepository>();
-            services.AddScoped<IStudentGradeRepository, StudentGradeRepository>();
-            services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 
             //Services(BL)//
             services.AddTransient<IProfessorService, ProfessorService>();

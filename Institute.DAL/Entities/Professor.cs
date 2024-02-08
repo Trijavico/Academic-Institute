@@ -1,5 +1,5 @@
 ﻿
-namespace Institute.DAL.Entities.Production
+namespace Institute.DAL.Entities
 {
     public class Professor : Core.Person
     {

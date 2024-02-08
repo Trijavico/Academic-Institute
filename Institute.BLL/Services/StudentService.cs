@@ -2,12 +2,9 @@ using Microsoft.Extensions.Logging;
 using Institute.DAL.Interfaces;
 using Institute.BLL.Contracts;
 using Institute.BLL.Core;
-using Institute.BLL.Dtos;
-using Institute.BLL.Models;
-using Institute.BLL.Responses;
+using Institute.BLL.Dto;
 using Institute.BLL.Validations;
-using System;
-using System.Linq;
+using Institute.DAL.Entities;
 
 namespace Institute.BLL.Services
 {
@@ -22,18 +19,18 @@ namespace Institute.BLL.Services
             this.logger = logger;
         }
 
-        public ServiceResult GetById(int Id)
+        public ServiceResult<StudentDTO> GetById(int Id)
         {
-            ServiceResult result = new ServiceResult();
+            var result = new ServiceResult<StudentDTO>();
 
             try
             {
-                DAL.Entities.Student student = studentRepository.GetEntity(Id);
+                Student student = studentRepository.GetEntity(Id);
 
-                StudentModel model = new StudentModel()
+                StudentDTO model = new StudentDTO()
                 {
-                    EnrollmentDate = student.EnrollmentDate.Value,
-                    EnrollmentDateDisplay = student.EnrollmentDate.Value.ToString("dd/mm/yyyy"),
+                    EnrollmentDate = student.EnrollmentDate,
+                    EnrollmentDateDisplay = student.EnrollmentDate.ToString("dd/mm/yyyy"),
                     FirstName = student.FirstName,
                     Id = student.Id,
                     LastName = student.LastName
@@ -45,23 +42,23 @@ namespace Institute.BLL.Services
             {
                 result.Success = false;
                 result.Message = "Error obteniendo el estudiante del Id.";
-                this.logger.LogError(result.Message, ex.ToString());
+                logger.LogError(result.Message, ex.ToString());
             }
             return result;
         }
-        public ServiceResult GetAll()
+        public ServiceResult<IEnumerable<StudentDTO>> GetAll()
         {
-            ServiceResult result = new ServiceResult();
+            var result = new ServiceResult<IEnumerable<StudentDTO>>();
 
             try
             {
                 var students = studentRepository.GetEntities();
 
-                result.Data = students.Select(st => new Models.StudentModel()
+                result.Data = students.Select(st => new StudentDTO()
                 {
                     Id = st.Id,
-                    EnrollmentDate = st.EnrollmentDate.Value,
-                    EnrollmentDateDisplay = st.EnrollmentDate.Value.ToString("dd/mm/yyyy"),
+                    EnrollmentDate = st.EnrollmentDate,
+                    EnrollmentDateDisplay = st.EnrollmentDate.ToString("dd/mm/yyyy"),
                     FirstName = st.FirstName,
                     LastName = st.LastName
                 }).ToList();
@@ -71,25 +68,24 @@ namespace Institute.BLL.Services
             {
                 result.Success = false;
                 result.Message = "Error obtiendo los estudiantes";
-                this.logger.LogError($" {result.Message} {ex.Message}", ex.ToString());
+                logger.LogError($" {result.Message} {ex.Message}", ex.ToString());
             }
 
             return result;
         }
-        public ServiceResult GetStudentsGrades()
+
+        
+
+        public ServiceResult<StudentDTO> RemoveStudent(StudentDTO studentReceived)
         {
-            throw new System.NotImplementedException();
-        }
-        public ServiceResult RemoveStudent(StudentRemoveDto removeDto)
-        {
-            ServiceResult result = new ServiceResult();
+            var result = new ServiceResult<StudentDTO>();
 
             try
             {
-                DAL.Entities.Student studentToRemove = studentRepository.GetEntity(removeDto.Id); 
+                Student studentToRemove = studentRepository.GetEntity(studentReceived.Id); 
 
-                studentToRemove.Id = removeDto.Id;
-                studentToRemove.UserDeleted = removeDto.UserDeleted;
+                studentToRemove.Id = studentReceived.Id;
+                studentToRemove.UserDeleted = true;
                 studentToRemove.Deleted = true;
                 studentToRemove.DeletedDate = DateTime.Now;
 
@@ -101,58 +97,43 @@ namespace Institute.BLL.Services
             {
                 result.Success = false;
                 result.Message = "Error eliminando el estudiante";
-                this.logger.LogError($" {result.Message} {ex.Message}", ex.ToString());
+                logger.LogError($" {result.Message} {ex.Message}", ex.ToString());
             }
 
             return result;
         }
-        public StudentSaveResponse SaveStudent(StudentSaveDto studentSaveDto)
+        public ServiceResult<StudentDTO> SaveStudent(StudentDTO studentReceived)
         {
-            StudentSaveResponse result = new StudentSaveResponse();
+            var result = new ServiceResult<StudentDTO>();
 
             try
             {
-                
-
-                var resutlIsValid = ValidationsPerson.IsValidPerson(studentSaveDto);
+                var resutlIsValid = ValidationsPerson.IsValidPerson(studentReceived);
 
                 if (resutlIsValid.Success)
                 {
-                    if (studentSaveDto.EnrollmentDate.HasValue)
-                    {
-                        
-                        if (studentRepository.Exists(st => st.FirstName == studentSaveDto.FirstName
-                                                        && st.LastName == studentSaveDto.LastName
-                                                        && st.EnrollmentDate.Value.Date == studentSaveDto.EnrollmentDate.Value.Date
-                                                        ))
-                        {
-                            result.Success = false;
-                            result.Message = "Este estudiante ya se encuentra registrado.";
-                            return result;
-                        }
-
-                        DAL.Entities.Student studentToAdd = new DAL.Entities.Student()
-                        {
-                            LastName = studentSaveDto.LastName,
-                            EnrollmentDate = studentSaveDto.EnrollmentDate,
-                            FirstName = studentSaveDto.FirstName,
-                            CreationDate = DateTime.Now,
-                            CreationUser = studentSaveDto.UserId
-                        };
-
-                        studentRepository.Save(studentToAdd);
-
-                        result.Matricula = studentToAdd.Id.ToString();
-
-                        result.Message = "Estudiante agregado correctamente";
-
-                    }
-                    else
+                    if (studentRepository
+                        .Exists(st => st.FirstName == studentReceived.FirstName
+                                        && st.LastName == studentReceived.LastName
+                                        && st.EnrollmentDate.Date == studentReceived.EnrollmentDate.Date
+                        ))
                     {
                         result.Success = false;
-                        result.Message = "La fecha de inscripción es requerida.";
+                        result.Message = "Este estudiante ya se encuentra registrado.";
                         return result;
                     }
+
+                    Student studentToSave = new Student()
+                    {
+                        LastName = studentReceived.LastName,
+                        EnrollmentDate = studentReceived.EnrollmentDate,
+                        FirstName = studentReceived.FirstName,
+                        CreationDate = DateTime.Now,
+                        CreationUser = studentReceived.Id
+                    };
+
+                    studentRepository.Save(studentToSave);
+                    result.Message = "Estudiante agregado correctamente";
                 }
                 else
                 {
@@ -169,41 +150,28 @@ namespace Institute.BLL.Services
             }
             return result;
         }
-        public StudentUpdateResponse UpdateStudent(StudentUpdateDto studentSaveDto)
+        public ServiceResult<StudentDTO> UpdateStudent(StudentDTO studenReceived)
         {
-            StudentUpdateResponse result = new StudentUpdateResponse();
+            var result = new ServiceResult<StudentDTO>();
 
             try
             {
-                
-
-                var resultIsValid = ValidationsPerson.IsValidPerson(studentSaveDto);
+                var resultIsValid = ValidationsPerson.IsValidPerson(studenReceived);
 
                 if (resultIsValid.Success)
                 {
+                    Student studentToUpdate = studentRepository.GetEntity(studenReceived.Id); 
 
-                    if (studentSaveDto.EnrollmentDate.HasValue)
-                    {
-                        DAL.Entities.Student studentToUpdate = studentRepository.GetEntity(studentSaveDto.Id); 
+                    studentToUpdate.FirstName = studenReceived.FirstName;
+                    studentToUpdate.LastName = studenReceived.LastName;
+                    studentToUpdate.EnrollmentDate = studenReceived.EnrollmentDate;
+                    studentToUpdate.ModifyDate = DateTime.Now;
+                    studentToUpdate.UserMod = studenReceived.Id;
+                    studentToUpdate.Id = studenReceived.Id;
 
-                        studentToUpdate.FirstName = studentSaveDto.FirstName;
-                        studentToUpdate.LastName = studentSaveDto.LastName;
-                        studentToUpdate.EnrollmentDate = studentSaveDto.EnrollmentDate;
-                        studentToUpdate.ModifyDate = DateTime.Now;
-                        studentToUpdate.UserMod = studentSaveDto.UserId;
-                        studentToUpdate.Id = studentSaveDto.Id;
+                    studentRepository.Update(studentToUpdate);
 
-                        studentRepository.Update(studentToUpdate);
-
-                        result.Message = "Estudiante actualizado correctamente";
-                    }
-                    else
-                    {
-                        result.Success = false;
-                        result.Message = "La fecha de inscripción es requerida.";
-                        return result;
-                    }
-
+                    result.Message = "Estudiante actualizado correctamente";
                 }
                 else
                 {
@@ -216,7 +184,7 @@ namespace Institute.BLL.Services
             {
                 result.Success = false;
                 result.Message = "Error actualizando el estudiante";
-                this.logger.LogError($" {result.Message} {ex.Message}", ex.ToString());
+                logger.LogError($" {result.Message} {ex.Message}", ex.ToString());
             }
 
             return result;

@@ -5,9 +5,9 @@ namespace Institute.BLL.Validations
 {
     public class ValidationsPerson
     {
-        public static ServiceResult IsValidPerson(PersonDto person)
+        public static ServiceResult<dynamic> IsValidPerson(IPerson person)
         {
-            ServiceResult result = new ServiceResult();
+            var result = new ServiceResult<dynamic>();
 
             if (string.IsNullOrEmpty(person.FirstName))
             {

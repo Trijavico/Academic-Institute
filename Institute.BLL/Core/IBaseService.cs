@@ -1,9 +1,9 @@
 ﻿
 namespace Institute.BLL.Core
 {
-    public interface IBaseService
+    public interface IBaseService<TEntity> where TEntity : class
     {
-        ServiceResult GetAll();
-        ServiceResult GetById(int Id);
+        ServiceResult<IEnumerable<TEntity>> GetAll();
+        ServiceResult<TEntity> GetById(int Id);
     }
 }

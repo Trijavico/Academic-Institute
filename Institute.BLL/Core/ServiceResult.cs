@@ -1,16 +1,10 @@
 ﻿
-
 namespace Institute.BLL.Core
 {
-    public class ServiceResult
+    public class ServiceResult<TEntity> where TEntity : class
     {
-        public ServiceResult()
-        {
-            this.Success = true;
-        }
-
-        public bool Success { get; set; }
-        public string Message { get; set; }
-        public dynamic Data { get; set; }
+        public bool Success { get; set; } = true;
+        public string Message { get; set; } = string.Empty;
+        public TEntity? Data { get; set; }
     }
 }

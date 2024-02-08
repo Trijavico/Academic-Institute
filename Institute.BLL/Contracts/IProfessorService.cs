@@ -1,14 +1,13 @@
 ﻿
 using Institute.BLL.Core;
 using Institute.BLL.Dto;
-using Institute.BLL.Responses;
 
 namespace Institute.BLL.Contracts
 {
-    public interface IProfessorService : IBaseService
+    public interface IProfessorService : IBaseService<ProfessorDTO>
     {
-        ProfessorResponse SaveProfessor(ProfessorSaveDto professorSaveDto);
-        ProfessorUpdateResponse UpdateProfessor(ProfessorUpdateDto studentSaveDto);
-        ServiceResult RemoveProfessor(ProfessorRemoveDto studentSaveDto);
+        ServiceResult<ProfessorDTO> SaveProfessor(ProfessorDTO professorSave);
+        ServiceResult<ProfessorDTO> UpdateProfessor(ProfessorDTO professorUpdate);
+        ServiceResult<ProfessorDTO> RemoveProfessor(ProfessorDTO professorRemove);
     }
 }

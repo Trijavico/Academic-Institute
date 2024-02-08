@@ -1,22 +1,23 @@
 ﻿using Institute.BLL.Core;
+using Institute.BLL.Dtos;
 
 
 namespace Institute.BLL.Validations
 {
     public static class ValidationCourse
     {
-        public static ServiceResult IsValidCourse(DtoCourseBase course)
+        public static ServiceResult<CourseDTO> IsValidCourse(CourseDTO courseReceived)
         {
-            ServiceResult result = new ServiceResult();
+            var result = new ServiceResult<CourseDTO>();
 
-            if (string.IsNullOrEmpty(course.Title))
+            if (string.IsNullOrEmpty(courseReceived.Title))
             {
                 result.Success = false;
                 result.Message = "El nombre del curso es requerido.";
                 return result;
             }
 
-            if (course.Title.Length > 50)
+            if (courseReceived.Title.Length > 50)
             {
                 result.Success = false;
                 result.Message = "La longitud del titulo es inválida.";

@@ -1,50 +1,38 @@
-﻿
-using Institute.BLL.Core;
-using Institute.BLL.Responses;
+﻿using Institute.BLL.Core;
+using Institute.BLL.Dto;
 using Institute.DAL.Interfaces;
 
 namespace Institute.BLL.Validations
 {
     public class ValidationsProfessor
     {
-        public static ServiceResult IsValidProfessor(DtoProfessorBase professorBase, IProfessorRepository professorRepository)
+        public static ServiceResult<ProfessorDTO> IsValidProfessor(ProfessorDTO professorReceived, IProfessorRepository professorRepository)
         {
-            ServiceResult result = new ServiceResult();
+            var result = new ServiceResult<ProfessorDTO>();
+            var IsValidPersonResult = ValidationsPerson.IsValidPerson(professorReceived);
 
-            var resutlIsValid = ValidationsPerson.IsValidPerson(professorBase);
-
-
-            if (resutlIsValid.Success)
+            if (IsValidPersonResult.Success)
             {
-                if (professorBase.HireDate.HasValue)
+                if (professorRepository.Exists(st =>
+                    st.FirstName == professorReceived.FirstName
+                    && st.LastName == professorReceived.LastName
+                    && st.HireDate == professorReceived.HireDate))
                 {
-                    // Verificar si el estudiante esta inscripto //
-                    if (professorRepository.Exists(st =>
-                        st.FirstName == professorBase.FirstName
-                        && st.LastName == professorBase.LastName
-                        && st.HireDate == professorBase.HireDate))
-                    {
-                        result.Success = false;
-                        result.Message = "Este professor ya se encuentra registrado.";
-                        return result;
-                    }
-
-                }
-                else
-                {
-                    result.Success = false;
-                    result.Message = "La fecha de contratacion es requerida.";
+                    result.Success = true;
+                    result.Message = "This professor is already registered";
                     return result;
                 }
             }
             else
             {
-                result.Success = resutlIsValid.Success;
-                result.Message = resutlIsValid.Message;
+                result.Success = IsValidPersonResult.Success;
+                result.Message = IsValidPersonResult.Message;
                 return result;
             }
 
-                return result;
+            result.Data = professorReceived;
+            
+            return result;
         }
     }
 }

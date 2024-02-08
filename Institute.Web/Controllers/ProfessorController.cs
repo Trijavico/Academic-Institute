@@ -1,10 +1,6 @@
 ﻿using Institute.BLL.Contracts;
-using Institute.BLL.Services;
-using Institute.DAL.Interfaces;
-using Institute.DAL.Repositories;
 using Institute.Web.Extensions;
 using Institute.Web.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Institute.Web.Controllers
@@ -15,7 +11,7 @@ namespace Institute.Web.Controllers
 
         public ProfessorController(IProfessorService service)
         {
-            this._service = service;
+            _service = service;
         }
 
         // GET: ProfessorController
@@ -34,30 +30,22 @@ namespace Institute.Web.Controllers
             return View(professor);
         }
 
-        // GET: ProfessorController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
         // POST: ProfessorController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Models.Professor professorModel)
+        public ActionResult Create(Professor professorModel)
         {
             try
             {
-                Institute.DAL.Entities.Production.Professor myProfessor = new DAL.Entities.Production.Professor()
+                var myProfessor = new BLL.Dto.ProfessorSaveDto()
                 {
-                    CreationDate = DateTime.Now,
-                    CreationUser = 1,
                     FirstName = professorModel.FirstName,
                     HireDate = (DateTime)professorModel.HireDate,
                     LastName = professorModel.LastName,
-                    Id = professorModel.Id
+                    UserId = professorModel.Id
                 };
 
-                professorRepository.Save(myProfessor);
+                _service.SaveProfessor(myProfessor);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -70,38 +58,36 @@ namespace Institute.Web.Controllers
         // GET: ProfessorController/Edit/5
         public ActionResult Edit(int id)
         {
-            var professor = this.professorRepository.GetProfessor(id);
+            var professor = _service.GetById(id).Data as Professor;
 
             Professor modelprofessor = new Professor()
             {
                 Id = professor.Id,
-                Name = professor.FirstName,
-                lastName = professor.LastName,
+                FirstName = professor.FirstName,
+                LastName = professor.LastName,
                 HireDate = professor.HireDate
             };
 
-            return View(modelprofessor);
+            return View(professor);
         }
 
         // POST: ProfessorController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Models.Professor professorModel)
+        public ActionResult Edit(Professor professorModel)
         {
             try
             {
 
-                Institute.DAL.Entities.Production.Professor pf = new DAL.Entities.Production.Professor()
-                
+                var pf = new BLL.Dto.ProfessorUpdateDto()
                 {
-                    ModifyDate = DateTime.Now,
-                    UserMod = 1,
-                    FirstName = professorModel.Name,
-                    LastName = professorModel.lastName,
-                    HireDate = (DateTime)professorModel.HireDate
+                    UserId = professorModel.Id,
+                    FirstName = professorModel.FirstName,
+                    LastName = professorModel.LastName,
+                    HireDate = professorModel.HireDate.HasValue ? professorModel.HireDate : null
                 };
 
-                professorRepository.Update(pf);
+                _service.UpdateProfessor(pf);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -114,17 +100,25 @@ namespace Institute.Web.Controllers
         // GET: ProfessorController/Delete/5
         public ActionResult Delete(int id)
         {
-            var professor = this.professorRepository.GetProfessor(id);
+            var professorResult = _service.GetById(id);
 
-            Professor modelprofessor = new Professor()
+            if (professorResult.Success && professorResult.Data is Professor professor)
             {
-                Id = professor.Id,
-                Name = professor.FirstName,
-                lastName = professor.LastName,
-                HireDate = professor.HireDate
-            };
+                Professor modelProfessor = new Professor()
+                {
+                    Id = professor.Id,
+                    FirstName = professor.FirstName,
+                    LastName = professor.LastName,
+                    HireDate = professor.HireDate
+                };
 
-            return View(modelprofessor);
+                return View(modelProfessor);
+            }
+            else
+            {
+                // Manejar el caso en el que no se pudo obtener el profesor
+                return RedirectToAction("Error");
+            }
         }
 
         // POST: ProfessorController/Delete/5
@@ -134,6 +128,18 @@ namespace Institute.Web.Controllers
         {
             try
             {
+                BLL.Models.ProfessorModel professor = _service.GetById(id).Data;
+                var professorToDelete = new BLL.Dto.ProfessorRemoveDto(){
+                    Id = id,
+                };
+
+                var result = _service.RemoveProfessor(professorToDelete);
+                if(result.Success){
+                    Console.WriteLine("BORRADO");
+                }else{
+                    Console.WriteLine("ERROR AL BORRAR");
+                }
+                
                 return RedirectToAction(nameof(Index));
             }
             catch

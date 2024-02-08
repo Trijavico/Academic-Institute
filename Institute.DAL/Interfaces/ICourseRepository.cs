@@ -1,17 +1,12 @@
 ﻿
 
 using Institute.DAL.Entities;
+using Institute.DAL.Core;
 
 namespace Institute.DAL.Interfaces
 {
-    public interface ICourseRepository
+    public interface ICourseRepository : IRepositoryBase<Course>
     {
-        void Save(Course course);
-        void Update(Course course);
-        void Remove(Course course);
-        Course GetCourse(int CourseId);
-        IEnumerable<Course> GetAll();
-        bool Exist(int courseId);
-        object GetEntities();
+
     }
 }

@@ -1,14 +1,10 @@
-﻿using Institute.DAL.Entities;
+﻿using Institute.DAL.Core;
+using Institute.DAL.Entities;
 
 namespace Institute.DAL.Interfaces
 {
-    public interface IStudentRepository
+    public interface IStudentRepository : IRepositoryBase<Student>
     {
-        void Save(Student student);
-        void Update(Student student);
-        void Remove(Student student);
-        Student GetStudent(int studentId);
-        IEnumerable<Student> GetAll();
-        bool Exists(int studentId);
+
     }
 }

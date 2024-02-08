@@ -1,40 +1,36 @@
-﻿
-using Institute.BLL.Contracts;
-using Institute.BLL.Core;
-using Institute.BLL.Dto;
-using Institute.BLL.Responses;
+﻿using Institute.BLL.Contracts;
 using Institute.BLL.Validations;
 using Institute.DAL.Interfaces;
-using Institute.DAL.Repositories;
 using Microsoft.Extensions.Logging;
-using Institute.BLL.Validations;
 using Institute.DAL.Entities.Production;
+using Institute.BLL.Dto;
+using Institute.BLL.Core;
 
 namespace Institute.BLL.Services
 {
     public class ProfessorService : IProfessorService
     {
-        private readonly IProfessorRepository professorRepository;
-        private readonly ILogger<ProfessorService> logger;
+        private readonly IProfessorRepository _professorRepository;
+        private readonly ILogger<ProfessorService> _logger;
 
         public ProfessorService(IProfessorRepository professorRepository,
                               ILogger<ProfessorService> logger)
         {
-            this.professorRepository = professorRepository;
-            this.logger = logger;
+            _professorRepository = professorRepository;
+            _logger = logger;
         }
 
 
 
-        public ServiceResult GetAll()
+        public ServiceResult<IEnumerable<ProfessorDTO>> GetAll()
         {
-            ServiceResult result = new ServiceResult();
+            var result = new ServiceResult<IEnumerable<ProfessorDTO>>();
 
             try
             {
-                var professors = professorRepository.GetEntities();
+                IEnumerable<Professor> professors = _professorRepository.GetEntities();
 
-                result.Data = professors.Select(st => new Models.ProfessorModel()
+                result.Data = professors.Select(st => new ProfessorDTO()
                 {
                     Id = st.Id,
                     HireDate = st.HireDate,
@@ -47,7 +43,7 @@ namespace Institute.BLL.Services
             {
                 result.Success = false;
                 result.Message = "Error obtiendo los profesores";
-                this.logger.LogError($" {result.Message} {ex.Message}", ex.ToString());
+                _logger.LogError($" {result.Message} {ex.Message}", ex.ToString());
             }
 
             return result;
@@ -56,15 +52,15 @@ namespace Institute.BLL.Services
 
 
 
-        public ServiceResult GetById(int Id)
+        public ServiceResult<ProfessorDTO> GetById(int Id)
         {
-            ServiceResult result = new ServiceResult();
+            var result = new ServiceResult<ProfessorDTO>();
 
             try
             {
-                var professor = professorRepository.GetEntity(Id);
+                var professor = _professorRepository.GetEntity(Id);
 
-                result.Data = new Models.ProfessorModel()
+                result.Data = new ProfessorDTO()
                 {
                     Id = professor.Id,
                     FirstName = professor.FirstName,
@@ -77,7 +73,7 @@ namespace Institute.BLL.Services
             {
                 result.Success = false;
                 result.Message = "Error obtiendo el profesor";
-                this.logger.LogError($" {result.Message} {ex.Message}", ex.ToString());
+                _logger.LogError($" {result.Message} {ex.Message}", ex.ToString());
             }
 
             return result;
@@ -86,20 +82,20 @@ namespace Institute.BLL.Services
 
 
 
-        public ServiceResult RemoveProfessor(ProfessorRemoveDto professorRemoveDto)
+        public ServiceResult<ProfessorDTO> RemoveProfessor(ProfessorDTO professorReceived)
         {
-            ServiceResult result = new ServiceResult();
+            var result = new ServiceResult<ProfessorDTO>();
 
             try
             {
-                var professorToRemove = professorRepository.GetEntity(professorRemoveDto.Id);
+                var professorToRemove = _professorRepository.GetEntity(professorReceived.Id);
 
-                professorToRemove.Id = professorRemoveDto.Id;
+                professorToRemove.Id = professorReceived.Id;
                 professorToRemove.UserDeleted = true;
                 professorToRemove.Deleted = true;
                 professorToRemove.DeletedDate = DateTime.Now;
 
-                professorRepository.Remove(professorToRemove);
+                _professorRepository.Remove(professorToRemove);
 
                 result.Message = "Profesor eliminado correctamente";
             }
@@ -107,7 +103,7 @@ namespace Institute.BLL.Services
             {
                 result.Success = false;
                 result.Message = "Error eliminando el profesor";
-                this.logger.LogError($" {result.Message} {ex.Message}", ex.ToString());
+                _logger.LogError($" {result.Message} {ex.Message}", ex.ToString());
             }
 
             return result;
@@ -116,27 +112,24 @@ namespace Institute.BLL.Services
 
 
 
-        public ProfessorResponse SaveProfessor(ProfessorSaveDto professorSaveDto)
+        public ServiceResult<ProfessorDTO> SaveProfessor(ProfessorDTO professorReceived)
         {
-            ProfessorResponse result = new ProfessorResponse();
+            var result = new ServiceResult<ProfessorDTO>();
 
-            result = (ProfessorResponse)ValidationsProfessor.IsValidProfessor(professorSaveDto, professorRepository);
+            var isValidProfessorResult = ValidationsProfessor.IsValidProfessor(professorReceived, _professorRepository);
             
-            if (result.Success)
+            if (isValidProfessorResult.Success)
             {
-                DAL.Entities.Production.Professor professorToAdd = new DAL.Entities.Production.Professor()
+                Professor professorToAdd = new Professor()
                 {
-                    LastName = professorSaveDto.LastName,
-                    HireDate = (DateTime)professorSaveDto.HireDate,
-                    FirstName = professorSaveDto.FirstName,
+                    LastName = professorReceived.LastName,
+                    HireDate = professorReceived.HireDate,
+                    FirstName = professorReceived.FirstName,
                     CreationDate = DateTime.Now,
-                    CreationUser = professorSaveDto.UserId
+                    CreationUser = professorReceived.Id,
                 };
 
-                professorRepository.Save(professorToAdd);
-
-                result.ProfessorId = professorToAdd.Id;
-
+                _professorRepository.Save(professorToAdd);
                 result.Message = "Profesor agregado correctamente";
 
             }
@@ -144,26 +137,24 @@ namespace Institute.BLL.Services
             return result;
         }
 
-
-
-        public ProfessorUpdateResponse UpdateProfessor(ProfessorUpdateDto professorUpdateDto)
+        public ServiceResult<ProfessorDTO> UpdateProfessor(ProfessorDTO professorReceived)
         {
-            ProfessorUpdateResponse result = new ProfessorUpdateResponse();
+            var result = new ServiceResult<ProfessorDTO>();
 
-            result = (ProfessorUpdateResponse)ValidationsProfessor.IsValidProfessor(professorUpdateDto, professorRepository);
+            result = ValidationsProfessor.IsValidProfessor(professorReceived, _professorRepository);
 
             try
             {
-                var professorToUpdate = professorRepository.GetEntity(professorUpdateDto.ProfessorId);
+                Professor professorToUpdate = _professorRepository.GetEntity(professorReceived.Id);
 
-                professorToUpdate.FirstName = professorUpdateDto.FirstName;
-                professorToUpdate.LastName = professorUpdateDto.LastName;
-                professorToUpdate.HireDate = (DateTime)professorUpdateDto.HireDate;
+                professorToUpdate.FirstName = professorReceived.FirstName;
+                professorToUpdate.LastName = professorReceived.LastName;
+                professorToUpdate.HireDate = professorReceived.HireDate;
                 professorToUpdate.ModifyDate = DateTime.Now;
-                professorToUpdate.UserMod = professorUpdateDto.UserId;
-                professorToUpdate.Id = professorUpdateDto.ProfessorId;
+                professorToUpdate.UserMod = professorReceived.Id;
+                professorToUpdate.Id = professorReceived.Id;
 
-                professorRepository.Update(professorToUpdate);
+                _professorRepository.Update(professorToUpdate);
 
                 result.Message = "Profesor actualizado correctamente";
             }
@@ -171,7 +162,7 @@ namespace Institute.BLL.Services
             {
                 result.Success = false;
                 result.Message = "Error actualizando el profesor";
-                this.logger.LogError($" {result.Message} {ex.Message}", ex.ToString());
+                _logger.LogError($" {result.Message} {ex.Message}", ex.ToString());
             }
 
             return result;

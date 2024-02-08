@@ -1,13 +1,11 @@
 ﻿using Institute.BLL.Core;
-using Institute.BLL.Dto;
 using Institute.BLL.Dtos;
 
 namespace Institute.BLL.Contracts
 {
-    public interface ICourseService : IBaseService
+    public interface ICourseService : IBaseService<CourseDTO>
     {
-        ServiceResult SaveCourse(SaveCourseDto saveCourseDto);
-        ServiceResult UpdateCourse(UpdateCourseDto studentSaveDto);
-        ServiceResult GetCoursesByDeparments();
+        ServiceResult<CourseDTO> SaveCourse(CourseDTO saveCourseDto);
+        ServiceResult<CourseDTO> UpdateCourse(CourseDTO studentSaveDto);
     }
 }

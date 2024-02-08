@@ -5,8 +5,8 @@ namespace Institute.DAL.Core
     {
         public BaseEntity()
         {
-            this.CreationDate = DateTime.Now;
-            this.Deleted = false;
+            CreationDate = DateTime.Now;
+            Deleted = false;
         }
 
         public int CreationUser { get; set; }
